@@ -1,0 +1,18 @@
+[project]
+name = "par2logreader"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Sebastian Hegardt",email = "sehe@netcompany.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pyqt6 (>=6.9.0,<7.0.0)",
+    "pyyaml (>=6.0.2,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
