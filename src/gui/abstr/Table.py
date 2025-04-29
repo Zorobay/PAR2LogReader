@@ -1,4 +1,5 @@
 ﻿import typing
+from doctest import script_from_examples
 
 from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex
 from PyQt6.QtWidgets import QHeaderView, QTableView
@@ -45,6 +46,7 @@ class Table(QTableView):
 
     def __init__(self):
         super().__init__()
+        self._scroll_to_bottom = False
 
     def setModel(self, model: TableModel):
         super().setModel(model)
@@ -52,8 +54,15 @@ class Table(QTableView):
         self.horizontalHeader().setSectionResizeMode(self.model().columnCount(), QHeaderView.ResizeMode.Stretch)
         self.setSortingEnabled(True)
 
+    def set_bottom_scrolling(self, enabled: bool):
+        self._scroll_to_bottom = enabled
+
     def model(self) -> TableModel:
         return super().model()
 
     def clear_data(self):
         self.model().clear_data()
+
+    def rowsInserted(self, parent, start, end):
+        if self._scroll_to_bottom:
+            self.scrollToBottom()

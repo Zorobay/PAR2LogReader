@@ -18,4 +18,4 @@ class PropertiesTable(Table):
         self.clear_data()
 
         for key, value in properties.items():
-            self._model.append_data([key, value])
+            self._model.append_data([key, str(value)])

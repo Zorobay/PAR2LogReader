@@ -21,10 +21,12 @@ class LogTableModel(TableModel):
             # .column() indexes into the sub-list
             match (index.column()):
                 case 0:
-                    return str(d.get_timestamp())
+                    return index.row()
                 case 1:
-                    return d.get_level()
+                    return str(d.get_timestamp())
                 case 2:
+                    return d.get_level()
+                case 3:
                     return d.get_message_template()
                 case _:
                     return 'ERROR'
@@ -46,11 +48,13 @@ class LogTable(Table):
         super().__init__()
         self._filepath = None
 
-        self.setModel(LogTableModel(['Timestamp', 'Level', 'Log Message']))
-        self.setColumnWidth(0, 200)
-        self.setColumnWidth(1, 100)
+        self.setModel(LogTableModel(['Row','Timestamp', 'Level', 'Log Message']))
+        self.setColumnWidth(0, 60)
+        self.setColumnWidth(1, 200)
+        self.setColumnWidth(2, 100)
         self.setSelectionBehavior(self.SelectionBehavior.SelectRows)
         self.setSelectionMode(self.SelectionMode.SingleSelection)
+        self.set_bottom_scrolling(True)
 
     def add_log_line(self, line: str):
         if line and line != '\n':
