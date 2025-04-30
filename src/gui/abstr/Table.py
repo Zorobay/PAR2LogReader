@@ -1,7 +1,7 @@
 ﻿import typing
 from doctest import script_from_examples
 
-from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex
+from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex, QSortFilterProxyModel
 from PyQt6.QtWidgets import QHeaderView, QTableView
 
 
@@ -47,9 +47,13 @@ class Table(QTableView):
     def __init__(self):
         super().__init__()
         self._scroll_to_bottom = False
+        self._column_sorting_model = QSortFilterProxyModel()
+        self._source_model = None
 
     def setModel(self, model: TableModel):
-        super().setModel(model)
+        self._source_model = model
+        self._column_sorting_model.setSourceModel(self._source_model)
+        super().setModel(self._column_sorting_model)
         self.horizontalHeader().setStretchLastSection(True)
         self.horizontalHeader().setSectionResizeMode(self.model().columnCount(), QHeaderView.ResizeMode.Stretch)
         self.setSortingEnabled(True)
@@ -58,7 +62,7 @@ class Table(QTableView):
         self._scroll_to_bottom = enabled
 
     def model(self) -> TableModel:
-        return super().model()
+        return self._source_model
 
     def clear_data(self):
         self.model().clear_data()
@@ -66,3 +70,7 @@ class Table(QTableView):
     def rowsInserted(self, parent, start, end):
         if self._scroll_to_bottom:
             self.scrollToBottom()
+
+    def selectedIndexes(self)-> list[QModelIndex]:
+        indices = super().selectedIndexes()
+        return [self._column_sorting_model.mapToSource(index) for index in indices]

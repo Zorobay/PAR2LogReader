@@ -1,7 +1,7 @@
 ﻿import re
 from typing import Dict, List
 
-from PyQt6.QtGui import QSyntaxHighlighter, QColor, QBrush, QTextCharFormat
+from PyQt6.QtGui import QSyntaxHighlighter, QColor, QBrush, QTextCharFormat, QFont
 from PyQt6.QtWidgets import QTextEdit
 
 from configs import Configs
@@ -33,9 +33,10 @@ class SyntaxHighlighter(QSyntaxHighlighter):
         self.setCurrentBlockState(0)
 
 
-class StackTraceWidget(QTextEdit):
+class StackTraceTextWidget(QTextEdit):
 
     def __init__(self):
         super().__init__()
-
+        self._mono_font = QFont('Consolas')
         self._syntax_highlighter = SyntaxHighlighter(Configs.get_stack_trace_highlights(), self)
+        self.setFont(self._mono_font)

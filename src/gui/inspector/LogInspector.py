@@ -4,7 +4,9 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout
 
 from src.gui.Splitter import Splitter
 from src.gui.inspector.PropertiesTable import PropertiesTable
-from src.gui.inspector.StackTraceWidget import StackTraceWidget
+from src.gui.inspector.stacktrace.StackTraceParsedWidget import StackTraceParsedWidget
+from src.gui.inspector.stacktrace.StackTraceTabWidget import StackTraceTabWidget
+from src.gui.inspector.stacktrace.StackTraceTextWidget import StackTraceTextWidget
 from src.logs import LogLine
 
 
@@ -12,7 +14,6 @@ class LogInspector(QWidget):
 
     def __init__(self):
         super().__init__()
-        self._mono_font = QFont('Consolas')
 
         self._layout = QHBoxLayout()
         self._splitter = Splitter(Qt.Orientation.Horizontal)
@@ -20,7 +21,9 @@ class LogInspector(QWidget):
         self._properties_layout = QVBoxLayout()
 
         self._stack_trace_label = QLabel('Stack Trace')
-        self._stack_trace_textbox = StackTraceWidget()
+        self._stack_trace_tab = StackTraceTabWidget()
+        self._stack_trace_textbox = StackTraceTextWidget()
+        self._stack_trace_parsed = StackTraceParsedWidget()
 
         self._properties_label = QLabel('Properties')
         self._properties_table = PropertiesTable()
@@ -29,9 +32,10 @@ class LogInspector(QWidget):
 
     def _initialize(self):
         self._stack_trace_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._stack_trace_tab.addTab(self._stack_trace_textbox, 'Text')
+        self._stack_trace_tab.addTab(self._stack_trace_parsed, 'Parsed')
         self._stack_trace_layout.addWidget(self._stack_trace_label)
-        self._stack_trace_textbox.setFont(self._mono_font)
-        self._stack_trace_layout.addWidget(self._stack_trace_textbox)
+        self._stack_trace_layout.addWidget(self._stack_trace_tab)
 
         self._properties_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._properties_layout.addWidget(self._properties_label)
@@ -48,4 +52,5 @@ class LogInspector(QWidget):
 
     def inspect(self, line: LogLine):
         self._stack_trace_textbox.setText(line.get_exception_stacktrace())
+        self._stack_trace_parsed.set_stack_trace(line.get_exception_stacktrace())
         self._properties_table.set_properties(line.get_properties())

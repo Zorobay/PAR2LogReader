@@ -9,7 +9,8 @@
         255
       ],
       "DPA.PAR2[\\.\\w]*": [0, 150, 0, 255],
-      "--- End of stack trace from previous location ---": [180,180,180,255]
+      "--- End of stack trace from previous location ---": [180,180,180,255],
+      "DPA.PAR2.Application[\\\\\\w]*.cs": [0, 150, 0, 255]
     }
   }
 }
