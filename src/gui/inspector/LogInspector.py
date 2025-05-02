@@ -1,11 +1,10 @@
 ﻿from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout
 
 from src.gui.Splitter import Splitter
 from src.gui.inspector.PropertiesTable import PropertiesTable
-from src.gui.inspector.stacktrace.StackTraceParsedWidget import StackTraceParsedWidget
 from src.gui.inspector.stacktrace.StackTraceTabWidget import StackTraceTabWidget
+from src.gui.inspector.stacktrace.StackTraceTable import StackTraceTable
 from src.gui.inspector.stacktrace.StackTraceTextWidget import StackTraceTextWidget
 from src.logs import LogLine
 
@@ -23,7 +22,7 @@ class LogInspector(QWidget):
         self._stack_trace_label = QLabel('Stack Trace')
         self._stack_trace_tab = StackTraceTabWidget()
         self._stack_trace_textbox = StackTraceTextWidget()
-        self._stack_trace_parsed = StackTraceParsedWidget()
+        self._stack_trace_parsed = StackTraceTable()
 
         self._properties_label = QLabel('Properties')
         self._properties_table = PropertiesTable()
