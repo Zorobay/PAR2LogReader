@@ -1,5 +1,5 @@
 [project]
-name = "par2logreader"
+name = "PAR2LogReader"
 version = "0.1.0"
 description = ""
 authors = [
@@ -13,6 +13,8 @@ dependencies = [
     "pyinstaller (>=6.13.0,<7.0.0)"
 ]
 
+[tool.poetry]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
