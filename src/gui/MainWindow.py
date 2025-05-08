@@ -58,6 +58,7 @@ class MainWindow(QMainWindow):
             print(f'Opening log at: {self._filepath}')
 
             self.status_bar.showMessage(self._filepath)
+            self.central_widget.clear()
             self._read_file_and_populate_table()
 
     def _read_file_and_populate_table(self):

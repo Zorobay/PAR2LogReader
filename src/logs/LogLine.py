@@ -4,10 +4,10 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-
 LEVEL_ERROR = 'Error'
 LEVEL_WARNING = 'Warning'
 LEVEL_INFORMATION = 'Information'
+
 
 class LogLine:
 
@@ -37,8 +37,8 @@ class LogLine:
 
     def get_exception_stacktrace(self) -> str:
         return self.exception_stacktrace
-    def _parse(self):
 
+    def _parse(self):
         self.timestamp = datetime.datetime.fromisoformat(self._try_get('Timestamp'))
         self.level = self._try_get('Level')
         self.message_template = self._try_get('MessageTemplate')

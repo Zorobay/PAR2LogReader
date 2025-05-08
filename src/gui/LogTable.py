@@ -48,13 +48,14 @@ class LogTable(Table):
         super().__init__()
         self._filepath = None
 
-        self.setModel(LogTableModel(['Row','Timestamp', 'Level', 'Log Message']))
+        self.setModel(LogTableModel(['Row', 'Timestamp', 'Level', 'Log Message']))
         self.setColumnWidth(0, 60)
         self.setColumnWidth(1, 200)
         self.setColumnWidth(2, 100)
         self.setSelectionBehavior(self.SelectionBehavior.SelectRows)
         self.setSelectionMode(self.SelectionMode.SingleSelection)
         self.set_bottom_scrolling(True)
+        self.sortByColumn(0, Qt.SortOrder.AscendingOrder)
 
     def add_log_line(self, line: str):
         if line and line != '\n':

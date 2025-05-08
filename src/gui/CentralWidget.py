@@ -34,9 +34,13 @@ class CentralWidget(QWidget):
         # Signals
         self.log_table.clicked.connect(self._on_log_table_item_clicked)
 
+    def clear(self):
+        self.log_table.clear_data()
+
     def add_log_line(self, line: str):
         self.log_table.add_log_line(line)
 
     def _on_log_table_item_clicked(self, item: QTableWidgetItem):
         selected_line = self.log_table.get_selected_line()
         self.log_inspector.inspect(selected_line)
+

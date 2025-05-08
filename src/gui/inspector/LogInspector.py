@@ -49,6 +49,11 @@ class LogInspector(QWidget):
         self._layout.addWidget(self._splitter)
         self.setLayout(self._layout)
 
+    def clear(self):
+        self._stack_trace_textbox.clear()
+        self._properties_table.clear_data()
+        self._stack_trace_parsed.clear_data()
+
     def inspect(self, line: LogLine):
         self._stack_trace_textbox.setText(line.get_exception_stacktrace())
         self._stack_trace_parsed.set_stack_trace(line.get_exception_stacktrace())
