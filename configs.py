@@ -21,8 +21,16 @@ class Configs:
 
     @classmethod
     def get_stack_trace_highlights(cls) -> Dict[re.Pattern, QColor]:
+        return cls._get_highlights('stack_trace')
+
+    @classmethod
+    def get_json_highlights(cls) -> Dict[re.Pattern, QColor]:
+        return cls._get_highlights('json')
+
+    @classmethod
+    def _get_highlights(cls, name: str) -> Dict[re.Pattern, QColor]:
         out = dict()
-        for regex, color in HIGHLIGHTS['stack_trace'].items():
+        for regex, color in HIGHLIGHTS[name].items():
             pattern = re.compile(regex)
             out[pattern] = QColor(*color)
 

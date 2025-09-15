@@ -2,7 +2,9 @@
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout
 
 from src.gui.Splitter import Splitter
-from src.gui.inspector.PropertiesTable import PropertiesTable
+from src.gui.inspector.properties.PropertiesRawTextWidget import PropertiesRawTextWidget
+from src.gui.inspector.properties.PropertiesTabWidget import PropertiesTabWidget
+from src.gui.inspector.properties.PropertiesTable import PropertiesTable
 from src.gui.inspector.stacktrace.StackTraceTabWidget import StackTraceTabWidget
 from src.gui.inspector.stacktrace.StackTraceTable import StackTraceTable
 from src.gui.inspector.stacktrace.StackTraceTextWidget import StackTraceTextWidget
@@ -25,6 +27,8 @@ class LogInspector(QWidget):
         self._stack_trace_parsed = StackTraceTable()
 
         self._properties_label = QLabel('Properties')
+        self._properties_tab = PropertiesTabWidget()
+        self._properties_raw_text = PropertiesRawTextWidget()
         self._properties_table = PropertiesTable()
 
         self._initialize()
@@ -36,9 +40,11 @@ class LogInspector(QWidget):
         self._stack_trace_layout.addWidget(self._stack_trace_label)
         self._stack_trace_layout.addWidget(self._stack_trace_tab)
 
+        self._properties_tab.addTab(self._properties_table, 'Table')
+        self._properties_tab.addTab(self._properties_raw_text, 'Raw Text')
         self._properties_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._properties_layout.addWidget(self._properties_label)
-        self._properties_layout.addWidget(self._properties_table)
+        self._properties_layout.addWidget(self._properties_tab)
 
         left_widget = QWidget()
         left_widget.setLayout(self._stack_trace_layout)
@@ -57,4 +63,6 @@ class LogInspector(QWidget):
     def inspect(self, line: LogLine):
         self._stack_trace_textbox.setText(line.get_exception_stacktrace())
         self._stack_trace_parsed.set_stack_trace(line.get_exception_stacktrace())
+
+        self._properties_raw_text.set_json(line.get_parsed_json())
         self._properties_table.set_properties(line.get_properties())

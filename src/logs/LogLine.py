@@ -38,12 +38,20 @@ class LogLine:
     def get_exception_stacktrace(self) -> str:
         return self.exception_stacktrace
 
+    def get_parsed_json(self) -> dict:
+        return self._parsed_json_line
+
     def _parse(self):
         self.timestamp = datetime.datetime.fromisoformat(self._try_get('Timestamp'))
         self.level = self._try_get('Level')
         self.message_template = self._try_get('MessageTemplate')
-        self.properties = self._try_get('Properties')
+        self.properties = self._build_properties()
         self.exception_stacktrace = self._parse_stacktrace()
+
+    def _build_properties(self) -> dict:
+        properties = {'Timestamp': self.timestamp, 'Level': self.level}
+        properties.update(self._try_get('Properties') or dict())
+        return properties
 
     def _try_get(self, key: str) -> str:
         try:

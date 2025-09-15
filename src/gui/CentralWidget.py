@@ -44,3 +44,6 @@ class CentralWidget(QWidget):
         selected_line = self.log_table.get_selected_line()
         self.log_inspector.inspect(selected_line)
 
+    def filter_log_lines(self, filter_text: str):
+        self.log_table.filter_rows(filter_text)
+

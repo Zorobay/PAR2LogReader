@@ -2,3 +2,9 @@ QLabel {
     font-size: 20px;
     text-align: center;
 }
+
+/* Set the behaviour for mouse hovering over rows */
+QTableView::item:hover {
+    background-color: transparent;
+    color: inherit;
+}
