@@ -41,6 +41,9 @@ class LogLine:
     def get_parsed_json(self) -> dict:
         return self._parsed_json_line
 
+    def get_original_line(self) -> str:
+        return self._line
+
     def _parse(self):
         self.timestamp = datetime.datetime.fromisoformat(self._try_get('Timestamp'))
         self.level = self._try_get('Level')

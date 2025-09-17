@@ -1,4 +1,4 @@
-QLabel {
+QLabel[class="heading"] {
     font-size: 20px;
     text-align: center;
 }

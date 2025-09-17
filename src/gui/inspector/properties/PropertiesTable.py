@@ -1,4 +1,6 @@
-﻿from src.gui.abstr.Table import Table, TableModel
+﻿from PyQt6.QtCore import QSortFilterProxyModel
+
+from src.gui.abstr.Table import Table, TableModel
 
 
 class PropertiesTableModel(TableModel):
@@ -12,7 +14,9 @@ class PropertiesTable(Table):
     def __init__(self):
         super().__init__()
         self._model = PropertiesTableModel(['Key', 'Value'])
-        self.setModel(self._model)
+        proxy_model = QSortFilterProxyModel()
+        self.setSortingEnabled(True)
+        self.setModel(self._model, proxy_model)
 
     def set_properties(self, properties: dict):
         self.clear_data()

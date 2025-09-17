@@ -37,8 +37,8 @@ class CentralWidget(QWidget):
     def clear(self):
         self.log_table.clear_data()
 
-    def add_log_line(self, line: str):
-        self.log_table.add_log_line(line)
+    def add_log_lines(self, lines: list[str]):
+        self.log_table.add_log_lines(lines)
 
     def _on_log_table_item_clicked(self, item: QTableWidgetItem):
         selected_line = self.log_table.get_selected_line()

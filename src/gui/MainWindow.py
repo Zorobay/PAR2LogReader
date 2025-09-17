@@ -3,13 +3,23 @@
 from PyQt6.QtCore import QThreadPool
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QToolBar, QLineEdit
+from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QToolBar, QLineEdit, QLabel
 
 from configs import Configs
 from src.gui.CentralWidget import CentralWidget
 from src.gui.Icon import Icon
 from src.io.FileStreamWorker import FileStreamWorker
 from src.io.FileStreamer import FileStreamer
+
+
+class StatusBar(QStatusBar):
+    def __init__(self):
+        super().__init__()
+        self._status_bar_right_widget = QLabel()
+        self.addPermanentWidget(self._status_bar_right_widget)
+
+    def show_message_right_side(self, msg: str):
+        self._status_bar_right_widget.setText(msg)
 
 
 class MainWindow(QMainWindow):
@@ -24,7 +34,9 @@ class MainWindow(QMainWindow):
 
         # === Layout ===
         self.central_widget = CentralWidget()
-        self.status_bar = QStatusBar()
+
+        # === Status bar ===
+        self.status_bar = StatusBar()
 
         # === Menubar ===
         self._menu_bar = self.menuBar()
@@ -73,13 +85,19 @@ class MainWindow(QMainWindow):
     def _on_search_input_text_changed(self):
         text = self._search_input.text()
         self.central_widget.filter_log_lines(text)
-
+        self._update_row_count_status()
 
     def _read_file_and_populate_table(self):
-        file_streamer = FileStreamer(self._filepath, 2000)
-        worker = FileStreamWorker(file_streamer, self._on_log_line_read)
+        file_streamer = FileStreamer(self._filepath, Configs.get_log_read_frequency_ms())
+        worker = FileStreamWorker(file_streamer)
+        worker.signals.batch_ready.connect(self._on_log_line_read)
         self._threadpool.start(worker)
 
-    def _on_log_line_read(self, log_line: str):
-        if log_line and log_line.strip() != '\n':
-            self.central_widget.add_log_line(log_line)
+    def _update_row_count_status(self):
+        row_count = self.central_widget.log_table.row_count()
+        filtered_row_count = self.central_widget.log_table.filtered_row_count()
+        self.status_bar.show_message_right_side(f'{filtered_row_count} of {row_count} lines')
+
+    def _on_log_line_read(self, log_lines: list[str]):
+        self.central_widget.add_log_lines(log_lines)
+        self._update_row_count_status()

@@ -1,6 +1,6 @@
 ﻿import typing
 
-from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex, QSortFilterProxyModel, QVariant
+from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex, QVariant, QAbstractProxyModel
 from PyQt6.QtGui import QPen, QBrush, QColor
 from PyQt6.QtWidgets import QHeaderView, QTableView, QStyledItemDelegate, QStyle
 
@@ -31,10 +31,13 @@ class TableModel(QAbstractTableModel):
     def get_row(self, index: int) -> typing.Any:
         return self._data[index]
 
-    def append_data(self, data):
-        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
-        self._data.append(data)
+    def extend_data(self, data: list):
+        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount() + len(data) - 1)
+        self._data.extend(data)
         self.endInsertRows()
+
+    def append_data(self, data):
+        self.extend_data([data])
 
     def clear_data(self):
         self.beginResetModel()
@@ -84,21 +87,35 @@ class Table(QTableView):
     def __init__(self):
         super().__init__()
         self._scroll_to_bottom = False
-        self._sort_filter_proxy_model = QSortFilterProxyModel()
+        self._proxy_model = None
         self._source_model = None
 
         self.setItemDelegate(OutlineSelectedRowDelegate())
         self.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
 
-    def setModel(self, model: TableModel):
+    def setModel(self, model: TableModel, proxy_model: QAbstractProxyModel = None):
         self._source_model = model
-        self._sort_filter_proxy_model.setSourceModel(self._source_model)
-        self._sort_filter_proxy_model.setFilterKeyColumn(-1)
-        self._sort_filter_proxy_model.setSortCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-        super().setModel(self._sort_filter_proxy_model)
+        self._proxy_model = proxy_model
+        if proxy_model:
+            self._proxy_model.setSourceModel(self._source_model)
+            super().setModel(self._proxy_model)
+        else:
+            super().setModel(self._source_model)
+
         self.horizontalHeader().setStretchLastSection(True)
         self.horizontalHeader().setSectionResizeMode(self.model().columnCount(), QHeaderView.ResizeMode.Stretch)
         self.setSortingEnabled(True)
+
+    def row_count(self) -> int:
+        return self._source_model.rowCount()
+
+    def filtered_row_count(self) -> int:
+        """
+        :return: The number of rows that are displayed after filtering
+        """
+        if not self._proxy_model:
+            return self.row_count()
+        return self._proxy_model.rowCount()
 
     def set_bottom_scrolling(self, enabled: bool):
         self._scroll_to_bottom = enabled
@@ -115,10 +132,7 @@ class Table(QTableView):
 
     def selectedIndexes(self) -> list[QModelIndex]:
         indices = super().selectedIndexes()
-        return [self._sort_filter_proxy_model.mapToSource(index) for index in indices]
-
-    def filter_rows(self, filter_str: str):
-        self._sort_filter_proxy_model.setFilterFixedString(filter_str)
+        return [self._proxy_model.mapToSource(index) for index in indices]
 
     def resize_columns_to_content(self, max_width: int):
         self.resizeColumnsToContents()

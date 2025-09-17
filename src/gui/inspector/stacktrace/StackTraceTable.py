@@ -3,6 +3,7 @@ import typing
 
 from PyQt6.QtCore import QModelIndex, Qt, QVariant
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QHeaderView
 
 from src.gui.abstr.Table import Table, TableModel
 
@@ -49,10 +50,13 @@ class StackTraceTable(Table):
         self._columns = ['Depth', 'Class', 'Method', 'Line']
         self._max_col_width = 400
         self.setModel(StackTraceTableModel(self._columns))
-        self.setColumnWidth(0, 80)
-        # self.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-        # self.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-        # self.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+
+        self.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        self.setColumnWidth(0, 100)
+
+        self.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        self.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
         self.verticalHeader().setVisible(False)
 
         self.sortByColumn(0, Qt.SortOrder.AscendingOrder)
@@ -61,9 +65,5 @@ class StackTraceTable(Table):
     def set_stack_trace(self, stack_trace: str):
         self.clear_data()
         data = _parse_stack_trace(stack_trace)
-        for i, d in enumerate(data):
-            row = [i]
-            row.extend(d)
-            self.model().append_data(row)
-
+        self.model().extend_data([[i, *d] for i, d in enumerate(data)])
         self.resize_columns_to_content(self._max_col_width)

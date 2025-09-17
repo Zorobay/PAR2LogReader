@@ -1,4 +1,4 @@
-﻿from PyQt6.QtCore import QModelIndex, Qt, QVariant
+﻿from PyQt6.QtCore import QModelIndex, Qt, QVariant, QSortFilterProxyModel
 from PyQt6.QtGui import QColor
 
 from src.gui.abstr.Table import Table, TableModel
@@ -37,18 +37,37 @@ class LogTableModel(TableModel):
         else:
             return QVariant()
 
-    def append_data(self, line: str):
-        log_line = LogLine(line)
-        super().append_data(log_line)
+    def extend_data(self, lines: list[str]):
+        log_lines = [LogLine(line) for line in lines]
+        super().extend_data(log_lines)
 
+class LogLineFilterProxyModel(QSortFilterProxyModel):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._filter_str = None
+
+    def set_filter_str(self, filter_str: str):
+        self._filter_str = filter_str
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, source_row: int, source_parent: QModelIndex) -> bool:
+        source_model = self.sourceModel()
+        log_line = source_model.get_row(source_row)
+        line = log_line.get_original_line()
+        if not self._filter_str:
+            return True
+
+        return self._filter_str.lower() in line.lower()
 
 class LogTable(Table):
 
     def __init__(self):
         super().__init__()
         self._filepath = None
+        self._sort_filter_proxy_model = LogLineFilterProxyModel()
 
-        self.setModel(LogTableModel(['Row', 'Timestamp', 'Level', 'Log Message']))
+        self.setModel(LogTableModel(['Row', 'Timestamp', 'Level', 'Log Message']), self._sort_filter_proxy_model)
         self.setColumnWidth(0, 60)
         self.setColumnWidth(1, 200)
         self.setColumnWidth(2, 100)
@@ -57,9 +76,12 @@ class LogTable(Table):
         self.set_bottom_scrolling(True)
         self.sortByColumn(0, Qt.SortOrder.AscendingOrder)
 
-    def add_log_line(self, line: str):
-        if line and line != '\n':
-            self.model().append_data(line)
+    def filter_rows(self, filter_str: str):
+        self._proxy_model.set_filter_str(filter_str)
+
+    def add_log_lines(self, lines: list[str]):
+        actual_lines = [l for l in lines if l and l != '\n']
+        self.model().extend_data(actual_lines)
 
     def get_selected_line(self) -> LogLine:
         row = self.selectedIndexes()[0].row()
