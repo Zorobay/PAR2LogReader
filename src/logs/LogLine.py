@@ -2,6 +2,8 @@
 import json
 import logging
 
+from src.enums.LogLevel import LogLevel
+
 _logger = logging.getLogger(__name__)
 
 LEVEL_ERROR = 'Error'
@@ -16,7 +18,7 @@ class LogLine:
         self._parsed_json_line = json.loads(self._line)
 
         self.timestamp = None
-        self.level = ''
+        self.level = LogLevel.UNKNOWN
         self.message_template = ''
         self.properties = dict()
         self.exception_stacktrace = ''
@@ -26,7 +28,7 @@ class LogLine:
     def get_timestamp(self) -> datetime.datetime:
         return self.timestamp
 
-    def get_level(self) -> str:
+    def get_level(self) -> LogLevel:
         return self.level
 
     def get_message_template(self) -> str:
@@ -46,7 +48,7 @@ class LogLine:
 
     def _parse(self):
         self.timestamp = datetime.datetime.fromisoformat(self._try_get('Timestamp'))
-        self.level = self._try_get('Level')
+        self.level = LogLevel.get_by_name(self._try_get('Level'))
         self.message_template = self._try_get('MessageTemplate')
         self.properties = self._build_properties()
         self.exception_stacktrace = self._parse_stacktrace()

@@ -125,6 +125,21 @@ PyQt6-Qt6 = ">=6.9.0,<6.10.0"
 PyQt6-sip = ">=13.8,<14"
 
 [[package]]
+name = "pyqt6-multiselect-combobox"
+version = "1.2.0"
+description = "A custom PyQt6 widget providing a multi-select combobox functionality for PyQt6 applications."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "pyqt6_multiselect_combobox-1.2.0-py3-none-any.whl", hash = "sha256:7f3f450d9be2772305e89885ccf0a74929fad88a1bc139d6c5f64cf5e6f20a96"},
+    {file = "pyqt6_multiselect_combobox-1.2.0.tar.gz", hash = "sha256:4bc1cf495c082d126ecf6952a1f8b4015a7f1c4dd600991183f35958a0b46c78"},
+]
+
+[package.dependencies]
+PyQt6 = ">=6.6.1"
+
+[[package]]
 name = "pyqt6-qt6"
 version = "6.9.0"
 description = "The subset of a Qt installation needed by PyQt6."
@@ -274,4 +289,4 @@ type = ["importlib_metadata (>=7.0.2) ; python_version < \"3.10\"", "jaraco.deve
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "ec6fc41218940366a6237d12eb34236e5d505941121fde14c7df31f410950b73"
+content-hash = "15775d1b0e51bec9453c0be222a26aa44433c4ef9a3a60fcaa76b86bb7efaec8"

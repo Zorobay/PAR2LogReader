@@ -8,7 +8,7 @@ from src.gui.inspector.properties.PropertiesTable import PropertiesTable
 from src.gui.inspector.stacktrace.StackTraceTabWidget import StackTraceTabWidget
 from src.gui.inspector.stacktrace.StackTraceTable import StackTraceTable
 from src.gui.inspector.stacktrace.StackTraceTextWidget import StackTraceTextWidget
-from src.gui.widgets.HeadingLabel import HeadingLabel
+from src.gui.widgets.HeadingLabelWidget import HeadingLabelWidget
 from src.logs import LogLine
 
 
@@ -22,12 +22,12 @@ class LogInspector(QWidget):
         self._stack_trace_layout = QVBoxLayout()
         self._properties_layout = QVBoxLayout()
 
-        self._stack_trace_label = HeadingLabel('Stack Trace')
+        self._stack_trace_label = HeadingLabelWidget('Stack Trace')
         self._stack_trace_tab = StackTraceTabWidget()
         self._stack_trace_textbox = StackTraceTextWidget()
         self._stack_trace_parsed = StackTraceTable()
 
-        self._properties_label = HeadingLabel('Properties')
+        self._properties_label = HeadingLabelWidget('Properties')
         self._properties_tab = PropertiesTabWidget()
         self._properties_raw_text = PropertiesRawTextWidget()
         self._properties_table = PropertiesTable()

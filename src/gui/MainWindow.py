@@ -4,8 +4,10 @@ from PyQt6.QtCore import QThreadPool
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QToolBar, QLineEdit, QLabel
+from pyqt6_multiselect_combobox import MultiSelectComboBox
 
 from configs import Configs
+from src.enums.LogLevel import LogLevel
 from src.gui.CentralWidget import CentralWidget
 from src.gui.Icon import Icon
 from src.io.FileStreamWorker import FileStreamWorker
@@ -45,7 +47,7 @@ class MainWindow(QMainWindow):
         self._button_tool_bar = QToolBar()
         self._filter_icon = Icon('res/icons/filter.png', 28, 28)
         self._search_input = QLineEdit()
-        # self._filter_log_level =
+        self._filter_log_level = MultiSelectComboBox()
 
         self._initialize()
 
@@ -63,8 +65,13 @@ class MainWindow(QMainWindow):
         file_menu.addAction(open_action)
 
         # === Toolbar ===
+        self._filter_log_level.addItems(LogLevel.get_known_options())
+        self._filter_log_level.selectAll()
+        self._filter_log_level.setMinimumWidth(200)
+        self._button_tool_bar.addWidget(self._filter_log_level)
         self._button_tool_bar.addWidget(self._search_input)
         self._search_input.textChanged.connect(self._on_search_input_text_changed)
+        self._filter_log_level.selectionChanged.connect(self._on_filter_log_level_selection_changed)
 
         # === Layouts ===
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self._button_tool_bar)
@@ -84,8 +91,11 @@ class MainWindow(QMainWindow):
 
     def _on_search_input_text_changed(self):
         text = self._search_input.text()
-        self.central_widget.filter_log_lines(text)
+        self.central_widget.filter_log_lines_by_text(text)
         self._update_row_count_status()
+
+    def _on_filter_log_level_selection_changed(self, checked_items: list[LogLevel]):
+        self.central_widget.filter_log_lines_by_log_level(checked_items)
 
     def _read_file_and_populate_table(self):
         file_streamer = FileStreamer(self._filepath, Configs.get_log_read_frequency_ms())

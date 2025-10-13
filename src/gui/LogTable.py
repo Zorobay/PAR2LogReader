@@ -1,6 +1,7 @@
 ﻿from PyQt6.QtCore import QModelIndex, Qt, QVariant, QSortFilterProxyModel
 from PyQt6.QtGui import QColor
 
+from src.enums.LogLevel import LogLevel
 from src.gui.abstr.Table import Table, TableModel
 from src.logs.LogLine import LogLine, LEVEL_ERROR, LEVEL_WARNING, LEVEL_INFORMATION
 
@@ -8,7 +9,7 @@ DEFAULT_COLOR = QColor().black()
 ERROR_COLOR = QColor(255, 0, 0, 50)
 WARNING_COLOR = QColor(255, 255, 0, 50)
 INFORMATION_COLOR = QColor(0, 255, 0, 50)
-LEVEL_COLOR_MAP = {LEVEL_ERROR: ERROR_COLOR, LEVEL_WARNING: WARNING_COLOR, LEVEL_INFORMATION: INFORMATION_COLOR}
+LEVEL_COLOR_MAP = {LogLevel.ERROR: ERROR_COLOR, LogLevel.WARNING: WARNING_COLOR, LogLevel.INFORMATION: INFORMATION_COLOR}
 
 
 class LogTableModel(TableModel):
@@ -46,19 +47,32 @@ class LogLineFilterProxyModel(QSortFilterProxyModel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._filter_str = None
+        self._filter_log_levels = list(LogLevel)
 
     def set_filter_str(self, filter_str: str):
         self._filter_str = filter_str
         self.invalidateFilter()
 
+    def set_filter_log_levels(self, log_levels: list[LogLevel]):
+        self._filter_log_levels = log_levels
+        self.invalidateFilter()
+
     def filterAcceptsRow(self, source_row: int, source_parent: QModelIndex) -> bool:
         source_model = self.sourceModel()
         log_line = source_model.get_row(source_row)
-        line = log_line.get_original_line()
-        if not self._filter_str:
-            return True
+        filter_str_res = True
+        filter_log_levels_res = True
 
-        return self._filter_str.lower() in line.lower()
+        # Filter by filter string
+        if self._filter_str:
+            line = log_line.get_original_line()
+            filter_str_res = self._filter_str.lower() in line.lower()
+
+        # Filter by log levels
+        log_level = log_line.get_level()
+        filter_log_levels_res = log_level in self._filter_log_levels
+
+        return filter_str_res and filter_log_levels_res
 
 class LogTable(Table):
 
@@ -76,8 +90,11 @@ class LogTable(Table):
         self.set_bottom_scrolling(True)
         self.sortByColumn(0, Qt.SortOrder.AscendingOrder)
 
-    def filter_rows(self, filter_str: str):
+    def filter_rows_by_text(self, filter_str: str):
         self._proxy_model.set_filter_str(filter_str)
+
+    def filter_rows_by_log_levels(self, log_levels: list[LogLevel]):
+        self._proxy_model.set_filter_log_levels(log_levels)
 
     def add_log_lines(self, lines: list[str]):
         actual_lines = [l for l in lines if l and l != '\n']

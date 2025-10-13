@@ -52,13 +52,14 @@ class StackTraceTable(Table):
         self._max_col_width = 400
         self.setModel(StackTraceTableModel(self._columns))
 
-        #self.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        self.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
-        self.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        self.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
         self.setColumnWidth(0, 80)
         self.setColumnWidth(3, 80)
         self.verticalHeader().setVisible(False)
+        self.horizontalHeader().setStretchLastSection(False)
 
         self.sortByColumn(0, Qt.SortOrder.AscendingOrder)
         self.setMouseTracking(True)

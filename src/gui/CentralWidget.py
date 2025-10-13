@@ -1,6 +1,7 @@
 ﻿from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QGridLayout, QTableWidgetItem
 
+from src.enums.LogLevel import LogLevel
 from src.gui.LogTable import LogTable
 from src.gui.Splitter import Splitter
 from src.gui.inspector.LogInspector import LogInspector
@@ -44,6 +45,9 @@ class CentralWidget(QWidget):
         selected_line = self.log_table.get_selected_line()
         self.log_inspector.inspect(selected_line)
 
-    def filter_log_lines(self, filter_text: str):
-        self.log_table.filter_rows(filter_text)
+    def filter_log_lines_by_text(self, filter_text: str):
+        self.log_table.filter_rows_by_text(filter_text)
+
+    def filter_log_lines_by_log_level(self, log_levels: list[LogLevel]):
+        self.log_table.filter_rows_by_log_levels(log_levels)
 
