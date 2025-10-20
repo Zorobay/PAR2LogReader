@@ -2,8 +2,9 @@
 
 ## Setup
 
-1. Install Poetry dependency manager: https://python-poetry.org/docs/#installation
-2. From the repository root, run `poetry install`
+1. Install Python 3.13 (3.14 not supported yet).
+2. Install Poetry dependency manager: https://python-poetry.org/docs/#installation
+3. From the repository root, run `poetry install`
    1. This creates a new poetry environment and installs all required dependencies
 
 ## Running
