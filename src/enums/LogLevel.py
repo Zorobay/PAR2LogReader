@@ -22,5 +22,6 @@ class LogLevel(StrEnum):
     ERROR = auto()
     WARNING = auto()
     INFORMATION = auto()
+    DEBUG = auto()
     UNKNOWN = auto()
 

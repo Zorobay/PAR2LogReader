@@ -3,13 +3,14 @@ from PyQt6.QtGui import QColor
 
 from src.enums.LogLevel import LogLevel
 from src.gui.abstr.Table import Table, TableModel
-from src.logs.LogLine import LogLine, LEVEL_ERROR, LEVEL_WARNING, LEVEL_INFORMATION
+from src.logs.LogLine import LogLine
 
 DEFAULT_COLOR = QColor().black()
 ERROR_COLOR = QColor(255, 0, 0, 50)
 WARNING_COLOR = QColor(255, 255, 0, 50)
 INFORMATION_COLOR = QColor(0, 255, 0, 50)
-LEVEL_COLOR_MAP = {LogLevel.ERROR: ERROR_COLOR, LogLevel.WARNING: WARNING_COLOR, LogLevel.INFORMATION: INFORMATION_COLOR}
+LEVEL_COLOR_MAP = {LogLevel.ERROR: ERROR_COLOR, LogLevel.WARNING: WARNING_COLOR,
+                   LogLevel.INFORMATION: INFORMATION_COLOR}
 
 
 class LogTableModel(TableModel):
@@ -42,6 +43,7 @@ class LogTableModel(TableModel):
         log_lines = [LogLine(line) for line in lines]
         super().extend_data(log_lines)
 
+
 class LogLineFilterProxyModel(QSortFilterProxyModel):
 
     def __init__(self, parent=None):
@@ -73,6 +75,7 @@ class LogLineFilterProxyModel(QSortFilterProxyModel):
         filter_log_levels_res = log_level in self._filter_log_levels
 
         return filter_str_res and filter_log_levels_res
+
 
 class LogTable(Table):
 

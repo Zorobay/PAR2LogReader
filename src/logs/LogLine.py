@@ -6,10 +6,6 @@ from src.enums.LogLevel import LogLevel
 
 _logger = logging.getLogger(__name__)
 
-LEVEL_ERROR = 'Error'
-LEVEL_WARNING = 'Warning'
-LEVEL_INFORMATION = 'Information'
-
 
 class LogLine:
 
