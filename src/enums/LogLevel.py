@@ -1,4 +1,4 @@
-﻿from enum import Enum, StrEnum, auto
+﻿from enum import StrEnum, auto
 
 
 class LogLevel(StrEnum):
@@ -24,4 +24,3 @@ class LogLevel(StrEnum):
     INFORMATION = auto()
     DEBUG = auto()
     UNKNOWN = auto()
-

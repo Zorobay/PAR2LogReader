@@ -7,7 +7,6 @@ from PyQt6.QtCore import QObject, pyqtSignal
 
 
 class FileStreamer(QObject):
-
     done_for_now = pyqtSignal(bool)
 
     def __init__(self, filepath: Path, update_freq_ms: int):

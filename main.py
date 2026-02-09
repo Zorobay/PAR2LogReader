@@ -1,10 +1,9 @@
 ﻿import json
 import sys
 
-import yaml
 from PyQt6.QtWidgets import QApplication
 
-import configs
+from src.config import configs
 from src.gui.MainWindow import MainWindow
 
 
@@ -12,6 +11,7 @@ def read_configs():
     with open('config/main.json', 'r') as f:
         config = json.load(f)
         configs.read_configs(config)
+
 
 def read_stylesheet(app: QApplication):
     with open('res/style.qss', 'r') as f:

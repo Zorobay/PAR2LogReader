@@ -3,10 +3,13 @@ from typing import Dict, Any
 
 from PyQt6.QtGui import QColor
 
-DEFAULT_OPEN_DIR = ''
+from src.config.RegistryManager import RegistryManager
+
 HIGHLIGHTS = []
 LOG_READ_BATCH_SIZE = 200
 LOG_READ_FREQUENCY_MS = 4000  # reads every n milliseconds
+
+registry_manager = RegistryManager()
 
 
 def _read_or_default(config: dict, key: str, default: Any) -> Any:
@@ -17,9 +20,6 @@ def _read_or_default(config: dict, key: str, default: Any) -> Any:
 
 
 def read_configs(config: dict):
-    global DEFAULT_OPEN_DIR
-    DEFAULT_OPEN_DIR = _read_or_default(config, 'default_open_dir', DEFAULT_OPEN_DIR)
-
     global HIGHLIGHTS
     HIGHLIGHTS = _read_or_default(config, 'highlights', HIGHLIGHTS)
 

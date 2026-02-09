@@ -1,6 +1,6 @@
 ﻿from PyQt6.QtCore import QRunnable, pyqtSlot, QObject, pyqtSignal
 
-from configs import Configs
+from src.config.configs import Configs
 from src.io.FileStreamer import FileStreamer
 
 

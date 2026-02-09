@@ -50,4 +50,3 @@ class CentralWidget(QWidget):
 
     def filter_log_lines_by_log_level(self, log_levels: list[LogLevel]):
         self.log_table.filter_rows_by_log_levels(log_levels)
-

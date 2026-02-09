@@ -1,10 +1,10 @@
 ﻿import re
-from typing import Dict, List
+from typing import Dict
 
 from PyQt6.QtGui import QSyntaxHighlighter, QColor, QBrush, QTextCharFormat, QFont
 from PyQt6.QtWidgets import QTextEdit
 
-from configs import Configs
+from src.config.configs import Configs
 
 
 def create_format(color: QColor) -> QTextCharFormat:
@@ -27,7 +27,7 @@ class SyntaxHighlighter(QSyntaxHighlighter):
             start = 0
 
             while match := regex.search(text, start):
-                self.setFormat(match.start(), match.end()-match.start(), fmt)
+                self.setFormat(match.start(), match.end() - match.start(), fmt)
                 start = match.end()
 
         self.setCurrentBlockState(0)

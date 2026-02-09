@@ -18,9 +18,6 @@ class LogTableModel(TableModel):
     def data(self, index: QModelIndex, role: int):
         d = self._data[index.row()]
         if role == Qt.ItemDataRole.DisplayRole:
-            # See below for the nested-list data structure.
-            # .row() indexes into the outer list,
-            # .column() indexes into the sub-list
             match (index.column()):
                 case 0:
                     return index.row()

@@ -19,12 +19,15 @@ A simple trick is to create a little PowerShell script, like `par2logreader.ps1`
 The script can be implemented like:
 
 ```ps1
-Push-Location "<dir>\PAR2LogReader"
+Push-Location "dir\to\PAR2LogReader"
 poetry run python main.py
+Pop-Location
 ```
-Change `<dir>` to where you've cloned the repo. The log reader can then be launched from any terminal by running the command `par2logreader`.
+Change `dir\to` to where you've cloned the repo. The log reader can then be launched from any terminal by running the command `par2logreader`.
 
 ## Building executable
+
+⚠️ Highly experimental!
 
 To build a single file executable, run `.\build.bat`. This creates an executable file in the `/dist` folder and copies assets.
 
@@ -36,7 +39,6 @@ The following can be configured:
 
 | Key                   | Type   | Description                                                                                                                    |
 |-----------------------|--------|--------------------------------------------------------------------------------------------------------------------------------|
-| default_open_dir      | path   | The default location where the file browser will be opened.                                                                    |
 | log_read_batch_size   | int    | The maximum number of lines that are read from a log file before updating the interface table.                                 |
 | log_read_frequency_ms | int    | The number of milliseconds to wait before attempting to read a live log again. All new data will be processesed on each read.  |
 | highlights            | object | This key controls the syntax highlighting of the stack trace and json views. See more info below.                              |

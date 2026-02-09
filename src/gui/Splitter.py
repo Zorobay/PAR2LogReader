@@ -19,9 +19,9 @@ class Splitter(QSplitter):
 
     def addWidget(self, wdg):
         super().addWidget(wdg)
-        self.width = self.handleWidth()
+        width = self.handleWidth()
         painter = SplitterPainter()
-        painter.setMaximumSize(self.width * 2, self.width * 10)
+        painter.setMaximumSize(width * 2, width * 10)
         layout = QHBoxLayout(self.handle(self.count() - 1))
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)

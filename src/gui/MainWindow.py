@@ -6,12 +6,15 @@ from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QToolBar, QLineEdit, QLabel
 from pyqt6_multiselect_combobox import MultiSelectComboBox
 
-from configs import Configs
+from src.config.RegistryManager import RegistryManager
+from src.config.configs import Configs
 from src.enums.LogLevel import LogLevel
 from src.gui.CentralWidget import CentralWidget
 from src.gui.Icon import Icon
 from src.io.FileStreamWorker import FileStreamWorker
 from src.io.FileStreamer import FileStreamer
+
+registry_manager = RegistryManager()
 
 
 class StatusBar(QStatusBar):
@@ -30,7 +33,6 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # === Data ===
-        self._last_open_dir = Configs.get_default_open_dir()
         self._filepath = None
         self._threadpool = QThreadPool()
 
@@ -77,11 +79,13 @@ class MainWindow(QMainWindow):
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self._button_tool_bar)
 
     def _on_open_button_clicked(self):
-        self._filepath, _ = QFileDialog.getOpenFileName(self, 'Open File', str(self._last_open_dir),
+        self._filepath, _ = QFileDialog.getOpenFileName(self, 'Open File',
+                                                        str(registry_manager.get_default_file_path()),
                                                         'Log Files (*.log)')
 
         if self._filepath:
-            self._last_open_dir = Path(self._filepath).parent
+            last_open_dir = Path(self._filepath).parent
+            registry_manager.update_default_file_path(last_open_dir)
 
             print(f'Opening log at: {self._filepath}')
 

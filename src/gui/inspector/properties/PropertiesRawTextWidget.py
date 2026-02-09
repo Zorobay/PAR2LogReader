@@ -5,7 +5,7 @@ from typing import Dict
 from PyQt6.QtGui import QSyntaxHighlighter, QColor, QBrush, QTextCharFormat, QFont
 from PyQt6.QtWidgets import QTextEdit
 
-from configs import Configs
+from src.config.configs import Configs
 
 
 def create_format(color: QColor) -> QTextCharFormat:
