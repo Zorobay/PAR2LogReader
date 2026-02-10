@@ -1,5 +1,9 @@
 ﻿# PAR2LogReader
 
+An application built specifically to parse and display PAR2 log files:
+
+![img.png](docs/img.png)
+
 ## Setup
 
 1. Install Python 3.13 (3.14 not supported yet).
