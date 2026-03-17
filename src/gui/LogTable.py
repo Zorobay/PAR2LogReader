@@ -24,7 +24,7 @@ class LogTableModel(TableModel):
                 case 1:
                     return str(d.get_timestamp())
                 case 2:
-                    return d.get_level()
+                    return str(d.get_level())
                 case 3:
                     return d.get_message_template()
                 case _:
